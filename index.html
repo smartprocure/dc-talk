@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>SmartProcure | DataContext | by Samuel Greene</title>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <style type="text/css">
+    body, h1, h2, h3, h4, h5, h6, label, span, div {
+    font-family: 'Open Sans', 'PT Sans', sans-serif;
+    }
+body {
+    min-height: 740px;
+    background: rgb(215, 215, 215);
+    background: radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    -webkit-font-smoothing: antialiased;
+}
+b, strong { font-weight: bold }
+i, em { font-style: italic}
+
+/* Lift some bootstrap */
+.text-center { text-align:center;}
+.code-snippet {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+}
+
+/* enable clicking on elements 'hiding' behind body in 3D */
+body     { pointer-events: none; }
+#impress { pointer-events: auto; }
+
+.step {
+    min-width: 900px;
+    padding: 40px;
+    box-sizing: border-box;
+    /*font-family: 'PT Serif', georgia, serif;*/
+    font-size: 48px;
+    line-height: 1.5;
+}
+.step {
+    transition: opacity 1s;
+}
+/* fade out inactive slides */
+.step:not(.active) {
+    opacity: 0.3;
+}
+
+.fadesIn {
+    opacity: 0;
+    transition: 0.5s;
+}
+.present .fadesIn, .past .fadesIn {
+    opacity: 100;
+}
+.fadesPresent {
+    opacity: 0;
+    transition: 0.5s;
+}
+.present .fadesPresent {
+    opacity: 100;
+}
+
+.delay25 { transition-delay: 0.25s;}
+.delay50 { transition-delay: 0.5s; }
+.delay75 { transition-delay: 0.75s; }
+.delay100 { transition-delay: 1s; }
+.delay125 { transition-delay: 1.25s; }
+.delay150 { transition-delay: 1.5s; }
+.delay175 { transition-delay: 1.75s; }
+.delay200 { transition-delay: 2s; }
+.delay225 { transition-delay: 2.25s; }
+
+.delay300 { transition-delay: 3s; }
+.delay400 { transition-delay: 4s; }
+.delay500 { transition-delay: 5s; }
+.delay600 { transition-delay: 6s; }
+.delay700 { transition-delay: 7s; }
+
+    </style>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/tomorrow.min.css">
+</head>
+<body>
+    <div id="impress">
+        <div class="step" data-x="0" data-y="0" data-rotate="5" data-scale="5">
+            <h3>Let's start with a story</h3>
+        </div>
+        <div class="step" data-x="0" data-y="1000" data-rotate="5" data-scale="5">
+            <h3 class="fadesIn delay50">Once Upon a time...</h3>
+        </div>
+        <div class="step" data-x="0" data-y="2000" data-rotate="5" data-scale="5">
+            <h3 class="fadesIn delay50">There was a search box.</h3>
+            <h3 class="fadesIn delay100">And his friend the Results table.</h3>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2">
+            <div class="row" style="width: 1200px;">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3>Results</h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="2000" data-rotate="5" data-scale="2" data-z="1000">
+            Life was good. Things were easy.
+            <br />
+            Change the text box, run a search.
+            <br />
+            <pre><code class="js">POST /search
+{
+    "query": "thing"
+}</code></pre>
+        </div>
+        <div class="step" data-x="7000" data-y="2500" data-rotate="5" data-scale="2" data-z="1000">
+            <div class="fadesIn">
+                Some new friends joined the party. The date filter and the number filter didn't want to be left out.
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2" data-z="2000">
+            <div class="row fadesIn" style="width: 1200px;">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3>Results</h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="2000" data-rotate="5" data-scale="2" data-z="3000">
+            Things are still easy.
+            <br />
+            Change any box, run a search.
+            <br />
+            <pre><code class="js">POST /search
+{
+    "query": "thing",
+    "IssuedDate": { "gt": "1/1/2015", "lt": "12/31/2015" },
+    "IssuedAmount": { "gt": "$500", "lt": "$1,000" },
+
+}</code></pre>
+        </div>
+        <div class="step" data-x="7000" data-y="2500" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                Now let's add a top vendors list by count
+                <pre><code class="sql">select * from POs
+group by AgencyName</code></pre>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2" data-z="4000">
+            <div class="row fadesIn" style="width: 1200px;">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Vendor Name</div>
+                            <table class="table table-striped"  style="font-size:20px">
+                                <tr><td>Vendor A</td><td>5000 POs</td></tr>
+                                <tr><td>Vendor B</td><td>4000 POs</td></tr>
+                                <tr><td>Vendor C</td><td>3000 POs</td></tr>
+                                <tr><td>Vendor D</td><td>2000 POs</td></tr>
+                                <tr><td>Vendor E</td><td>1000 POs</td></tr>
+                            </table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3>Results</h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="3000" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                Oh, and a chart
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2" data-z="4000">
+            <div class="row fadesIn" style="width: 1200px;">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Vendor Name</div>
+                            <table class="table table-striped" style="font-size:20px">
+                                <tr><td>Vendor A</td><td>5000 POs</td></tr>
+                                <tr><td>Vendor B</td><td>4000 POs</td></tr>
+                                <tr><td>Vendor C</td><td>3000 POs</td></tr>
+                                <tr><td>Vendor D</td><td>2000 POs</td></tr>
+                                <tr><td>Vendor E</td><td>1000 POs</td></tr>
+                            </table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3>Results</h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Stuff over time</div>
+                        <div class="panel-body">
+                            <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="3500" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                Let's not forget paging and sorting.
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2" data-z="4000">
+            <div class="row fadesIn" style="width: 1200px;">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline" style="font-size:20px">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Vendor Name</div>
+                            <table class="table table-striped" style="font-size:20px">
+                                <tr><td>Vendor A</td><td>5000 POs</td></tr>
+                                <tr><td>Vendor B</td><td>4000 POs</td></tr>
+                                <tr><td>Vendor C</td><td>3000 POs</td></tr>
+                                <tr><td>Vendor D</td><td>2000 POs</td></tr>
+                                <tr><td>Vendor E</td><td>1000 POs</td></tr>
+                            </table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="form-inline">
+                                Results
+                                <div class="pull-right">
+
+                            <select class="form-control">
+                                <option>Sort by Field</option>
+                            </select>
+                            <select class="form-control">
+                                <option>Page 1</option>
+                            </select>
+                                </div>
+                            </h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Stuff over time</div>
+                        <div class="panel-body">
+                            <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="4500" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                <div class="fadesIn">Cool, update all the things!</div>
+                <div class="fadesIn delay100">Wait... Aww, crap.</div>
+                <div class="fadesIn delay200">
+                    On sort change, only update results.
+                </div>
+                <div class="fadesIn delay300">
+                    Phew, we got this.
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="5500" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                <div class="fadesIn">Oh, you want a see more button for vendors...</div>
+                <div class="fadesIn delay100">Ok, so when you click see more get the vendors but on sort change get the pos but on search change get the chart and vendors and the POs and the.....</div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="6500" data-rotate="5" data-scale="2" data-z="3000">
+            <div class="fadesIn">
+                <div class="fadesIn">I heard you like some checkboxes with your Vendors
+                </div>
+                <div class="fadesIn delay100">
+                    <img src="https://i.memecaptain.com/gend_images/Cc5mHg.png">
+                </div>
+            </div>
+        </div>
+
+        <div class="step" data-x="5000" data-y="6500" data-rotate="5" data-scale="2" data-z="4000">
+            <div class="row fadesIn" style="width: 1200px; font-size:20px">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Vendor Name</div>
+                            <table class="table table-striped">
+                                <tr><td><input type="checkbox"/> Vendor A</td><td>5000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor B</td><td>4000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor C</td><td>3000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor D</td><td>2000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor E</td><td>1000 POs</td></tr>
+                            </table>
+                            <a style="font-size:20px;">See More</a>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="form-inline">
+                                Results
+                                <div class="pull-right">
+
+                            <select class="form-control">
+                                <option>Sort by Field</option>
+                            </select>
+                            <select class="form-control">
+                                <option>Page 1</option>
+                            </select>
+                                </div>
+                            </h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Stuff over time</div>
+                        <div class="panel-body">
+                            <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step" data-x="7000" data-y="2000" data-rotate="5" data-scale="2" data-z="5000">
+            <div class="fadesIn">
+                <div class="fadesIn">Wait... What?</div>
+                <div class="fadesIn delay50">
+                    <small><small><small><small>
+                        Ok cool, so when you click a checkbox or change a filter or the sort or the page, you have to get the chart and the results and filter by the checked vendors, but you have to ignore the checked items when you get the vendors when you change the filters or when you click see more, and on see more you need to only get vendors and not the chart or the results...
+                    </small></small></small></small>
+                </div>
+                <br />
+                <div class="fadesIn delay200">But I think we got this...</div>
+                <br />
+                <div class="fadesIn delay300">MOARR CHECKBOX LISTZZZ!!!</div>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="6500" data-rotate="5" data-scale="2" data-z="5000">
+            <div class="row fadesIn" style="width: 1200px; font-size:10px">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Date</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Issued Amount</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Vendor Name</div>
+                            <table class="table table-striped">
+                                <tr><td><input type="checkbox"/> Vendor A</td><td>5000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor B</td><td>4000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Vendor C</td><td>3000 POs</td></tr>
+                            </table>
+                            <a>More</a>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Agency Name</div>
+                            <table class="table table-striped">
+                                <tr><td><input type="checkbox"/> Agency A</td><td>5000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Agency B</td><td>4000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Agency D</td><td>2000 POs</td></tr>
+                            </table>
+                            <a>More</a>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Agency Type</div>
+                            <table class="table table-striped">
+                                <tr><td><input type="checkbox"/> Federal</td><td>5000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> State</td><td>4000 POs</td></tr>
+                                <tr><td><input type="checkbox"/> Local</td><td>3000 POs</td></tr>
+                            </table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="form-inline">
+                                Results
+                                <div class="pull-right">
+
+                            <select class="form-control">
+                                <option>Sort by Field</option>
+                            </select>
+                            <select class="form-control">
+                                <option>Page 1</option>
+                            </select>
+                                </div>
+                            </h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Stuff over time</div>
+                        <div class="panel-body">
+                            <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step" data-x="7000" data-y="2000" data-rotate="5" data-scale="2" data-z="6000">
+            <div class="fadesIn">
+                <div class="fadesIn" style="font-size:20px">
+                    Ok, so if you check a vendor you need to get the results, the chart, the agency names and the agency types and filter by the checked vendor, but if you check an agency name you need to get the vendor list and agency type list with the agency name checked but not consider the vendor name, agency name, or agency type checkboxes if the....
+                </div>
+                <br />
+                <div class="fadesIn delay200">Still got this...</div>
+                <br />
+                <div class="fadesIn delay300">MOARR CHARTS! Oh, and include/exclude on facets and the find box to filter facet options as you go...</div>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="2000" data-rotate="5" data-scale="2" data-z="6000">
+            <div class="row fadesIn" style="width: 1200px; font-size:10px">
+                <div class="col-xs-6">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="form-group form-inline">
+                                <label>Search</label>
+                                <div class="input-group input-group-lg">
+                                    <input class="form-control" type="text" value="thing" />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Issued Date
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="1/1/2015"> to
+                                <input type="text" class="form-control" value="12/12/2015">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Issued Amount
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                from
+                                <input type="text" class="form-control" value="$500"> to
+                                <input type="text" class="form-control" value="$1,000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Vendor Name
+                            <select class="pull-right"><option>Include</option></select>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-filter"></i>
+                            </div>
+                            <input class="form-control" type="text" name="" placeholder="FIND.." />
+                        </div>
+                        <table class="table table-striped">
+                            <tr><td><input type="checkbox"/> Vendor A</td><td>5000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> Vendor B</td><td>4000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> Vendor D</td><td>2000 POs</td></tr>
+                        </table>
+                        <a>More</a>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Agency Name
+                            <select class="pull-right"><option>Include</option></select>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-filter"></i>
+                            </div>
+                            <input class="form-control" type="text" name="" placeholder="FIND.." />
+                        </div>
+                        <table class="table table-striped">
+                            <tr><td><input type="checkbox"/> Agency A</td><td>5000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> Agency B</td><td>4000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> Agency C</td><td>3000 POs</td></tr>
+                        </table>
+                        <a>More</a>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Agency Type
+                            <select class="pull-right"><option>Include</option></select>
+
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-filter"></i>
+                            </div>
+                            <input class="form-control" type="text" name="" placeholder="FIND.."  />
+                        </div>
+                        <table class="table table-striped">
+                            <tr><td><input type="checkbox"/> Federal</td><td>5000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> State</td><td>4000 POs</td></tr>
+                            <tr><td><input type="checkbox"/> Local</td><td>3000 POs</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="form-inline">
+                                Results
+                                <div class="pull-right">
+
+                            <select class="form-control">
+                                <option>Sort by Field</option>
+                            </select>
+                            <select class="form-control">
+                                <option>Page 1</option>
+                            </select>
+                                </div>
+                            </h3>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                                <td>data</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Stuff over time</div>
+                                <div class="panel-body">
+                                    <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Stuff over time</div>
+                                <div class="panel-body">
+                                    <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Stuff over time</div>
+                                <div class="panel-body">
+                                    <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Stuff over time</div>
+                                <div class="panel-body">
+                                    <img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-office-chart-line-icon.png"></img>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step" data-x="7000" data-y="2000" data-rotate="5" data-scale="2" data-z="7000">
+            <div class="fadesIn" style="width:1280px">
+                <img width="500" src="http://bitterempire.com/wp-content/uploads/2015/01/hey-everybody.jpg" class="pull-left" />
+                <div style="font-size:40px">"The knee bone's connected to the... something.<br/>
+                The something's connected to the red thing.<br/>
+                The red thing's connected to my wristwatch. Uh oh."<br/>
+                - During Homer's Triple Bypass</div>
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="2000" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                Oh, did you think we were done?
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="3000" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                We've got multiple tabs where we put things, and the things that aren't visible need to not run.
+            </div>
+            <div class="fadesIn delay100">But they need to intelligently resume and run a search only if they missed updates.</div>
+        </div>
+        <div class="step" data-x="4000" data-y="4000" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                By the way, you can dynamically add filters to the page
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="4500" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                Charts are dynamic, too. "See more" on the top vendor charts is coming...
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="5000" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                Don't forget that you can change the type of a filter at any time from say, checkbox list to string contains
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="5500" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                And there's this crazy "customers of" filter coming down the pipe that we won't even get into...
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="6000" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                Still with me?
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="6500" data-rotate="5" data-scale="2" data-z="8000">
+            <div class="fadesIn">
+                Ok, cool. So when this thing changes we update this and this and this but not that and when this changes.....
+            </div>
+        </div>
+        <div class="step" data-x="4000" data-y="6500" data-rotate="180" data-scale="1" data-z="100">
+            <div class="fadesIn">
+                <img width="1200" src="http://cdn.meme.am/instances/500x/54832238.jpg"></img>
+            </div>
+        </div>
+
+        <div class="step" data-x="10000" data-y="9000" data-rotate="0" data-scale="5">
+            <h1>Lets start over.</h1>
+        </div>
+        <div class="step" data-x="10000" data-y="10000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">What if we just have some generic structures instead?</h1>
+        </div>
+        <div class="step" data-x="10000" data-y="11000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">They could have some contextually updated properties, dependant on everyone else.
+            <br/><br />
+            Let's call this their <code>context</code></h1>
+        </div>
+        <div class="step" data-x="10000" data-y="12000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">They could have bits of data that everyone else is also concerned with.
+            <br/><br />
+            Let's call this their <code>data</code>
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="13000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">They could have some configuration that only they are concerned with.
+            <br/><br />
+            Let's call this their <code>config</code>
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="14000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">
+                While we're naming things, let's call this monitored data/context thing a <code>DataContext</code>.
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="15000" data-rotate="0" data-scale="5">
+            <h1 class="fadesIn">
+                And <code>DataContexts</code> need to live in some kind of group so they can keep track of each other. Let's call that a <code>ContextGroup</code>
+            </h1>
+        </div>
+        <div class="step" data-x="9000" data-y="18000" data-rotate="90" data-scale="5">
+            <h1 class="fadesIn">
+                Ok, awesome. So here's roughly what we've got:
+                <pre><code class="js">var DataContext = {
+    data: {}, // Things that affect everything else
+    config: {}, // Things that only affect this one
+    context: {} // The contextual bit
+}
+var ContextGroup = {
+    items: [DataContext, DataContext, ...]
+}</code></pre>
+            </h1>
+        </div>
+        <div class="step" data-x="8000" data-y="18000" data-rotate="90" data-scale="5">
+            <div class="fadesIn">Let's define some simple rules</div>
+        </div>
+        <div class="step" data-x="7000" data-y="18000" data-rotate="90" data-scale="5">
+            <div class="fadesIn">When any <code>data</code> changes on a <code>DataContext</code>, everyone else needs to update</div>
+        </div>
+        <div class="step" data-x="6000" data-y="18000" data-rotate="90" data-scale="5">
+            <div class="fadesIn">When any <code>config</code> changes, only that <code>DataContext</code> needs to update</div>
+        </div>
+
+        <div class="step" data-x="5000" data-y="15000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <div class="fadesIn">So how might this work with our crazy UI?</div>
+        </div>
+        <div class="step" data-x="5000" data-y="14000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <div class="fadesIn">
+                Let's look at <code>query</code>
+                <pre><code class="js">var query = {
+    data: {
+        search: 'someSearch'
+    }
+    // No config and no context
+}</code></pre>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="12500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <div class="fadesIn">
+                What about <code>results</code>?
+                <pre><code class="js">var results = {
+    // No data
+    config: {
+        sort: 'PO.IssuedDate',
+        page: 1,
+        ...
+    },
+    context: {
+        records: [PurchaseOrder, PurchaseOrder, ..]
+    }
+}</code></pre>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="10500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <div class="fadesIn">
+                Checkbox lists (<code>facet</code>)?
+                <pre><code class="js">var facet = {
+    data: {
+        checkedValues: ['a', 'b', ...],
+        mode: 'include'
+    },
+    config: {
+        count: 10,
+        find: 'someString'
+    },
+    context: {
+        options: [{ name: 'example', count: 123 }, ...]
+    }
+}</code></pre>
+            </div>
+        </div>
+        <div class="step" data-x="5000" data-y="8500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <div class="fadesIn">
+                Even... <code>charts</code>!
+                <pre><code class="js">var someChart = {
+    // No data
+    config: {
+        // key and value fields, counts, etc
+    },
+    context: {
+        // top terms, etc
+    }
+}</code></pre>
+            </div>
+        </div>
+
+
+        <div class="step" data-x="13000" data-y="15000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn">Any other event types besides <code>dataChange</code> and <code>configChange</code>?</div>
+        </div>
+        <div class="step" data-x="13000" data-y="14000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn">Of course :)</div>
+        </div>
+        <div class="step" data-x="13000" data-y="13000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn">So we react to events with these things called <code>Reactors</code>. Great name, right?</div>
+        </div>
+        <div class="step" data-x="13000" data-y="12000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn"><code>dataChange</code> has an <code>others</code> reactor</div>
+        </div>
+        <div class="step" data-x="13000" data-y="11500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn"><code>configChange</code> has an <code>only</code> reactor</div>
+        </div>
+        <div class="step" data-x="13000" data-y="10500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn">Others for things like <code>typeChange</code>, <code>itemAdded</code>, <code>itemRemoved</code>, etc</div>
+        </div>
+        <div class="step" data-x="13000" data-y="9000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <div class="fadesIn">
+                So what exactly <em>is</em> a <code>reactor</code>? Just a <code>function</code>:
+                <pre><code class="js">function reactor(items, instigator) {
+    // items is the list of DataContexts in the ContextGroup
+    // instigator is the DataContext whose event this is about
+    return arrayOfDataContextsThatNeedToUpdate;
+}</code></pre>
+            </div>
+        </div>
+
+
+
+        <div class="step" data-x="10000" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                So what else does this enable?
+            </h1>
+        </div>
+        <div class="step" data-x="10500" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Add/remove filters? No problem :)
+            </h1>
+        </div>
+        <div class="step" data-x="11000" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Add/remove CHARTS? No problem :)
+            </h1>
+        </div>
+        <div class="step" data-x="11500" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Global debouncing
+            </h1>
+        </div>
+        <div class="step" data-x="12000" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Global pause/resume
+            </h1>
+        </div>
+        <div class="step" data-x="13500" data-y="18000" data-rotate="90" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Hierarchical Groups
+                <br /><br />- Group items can be <code>DataContext</code> or <code>ContextGroup</code>
+                <br /><br />- Groups can be used to organize a search by sections
+                <br /><br />- Groups can also have <code>join</code> property, for infinite nesting of <code>and, or, not</code>
+            </h1>
+        </div>
+
+
+
+
+
+        <div class="step" data-x="10000" data-y="20000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Not enough cool stuff yet?
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="20500" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Let's talk about <code>cascading</code> with the <code>GroupCompositor</code>.
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="21000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Feeds the output of one search to the input of another - link a <code>context</code> to a <code>data</code>
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="21500" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Basically, <code class="sql">select in</code>. Which is a type of relational join... On a non-relational databases.
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="22000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                By the way... elastic-what?
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="22500" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Anybody notice the use of SQL and mongo syntax instead of the ES DSL?
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="23000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                The search services can easily be backed by mongo, sql, keebler elves, whatever
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="23500" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                The mongo backer will be like flipping a switch on all our user data
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="24000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                One more thing...
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="24500" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                Cascade a mongo backed context group into an elasticsearch backed group?
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="25000" data-rotate="0" data-rotate-y="180" data-scale="5">
+            <h1 class="fadesIn">
+                That's cross database joins on arbitrary data stores. That don't need to be relational.
+            </h1>
+        </div>
+        <div class="step" data-x="10000" data-y="25000" data-z="-5000" data-rotate="0" data-rotate-y="180" data-scale="10">
+            <h1 class="fadesPresent">
+                <img width="900" src="http://cdn.meme.am/instances2/500x/2640956.jpg"></img>
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="25000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                Let's talk about the Grand Vision.
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="24500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                3 Pillars:
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="24000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                <code>Partial Searches</code> (<small>DataContexts</small>)
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="23500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                <code>Analysis/Reports</code> (<small>Collections of DataContext Renderers - SmartExport output targets and KO components</small>)
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="23000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                <code>Alerts</code> (<small>Agenda Scheduling - SmartExport</small>)
+            </h1>
+        </div>
+        <!--<div class="step" data-x="15000" data-y="22500" data-rotate="180" data-rotate-y="30" data-scale="5">-->
+        <!--    <h1 class="fadesIn">-->
+        <!--        <code>Output Target</code> (<small>Email/CSV/PDF/etc - SmartExport</small>)-->
+        <!--    </h1>-->
+        <!--</div>-->
+
+        <div class="step" data-x="15000" data-y="22000" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                Upcoming Products?
+
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="21500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                Customers at Risk,
+                Prospecting,
+                Agency Dashboard,
+                Custom Reports (Phase 2 from investor slide deck),
+                the "widgets"/dashboard...
+            </h1>
+        </div>
+        <div class="step" data-x="15000" data-y="20500" data-rotate="180" data-rotate-y="30" data-scale="5">
+            <h1 class="fadesIn">
+                It's all the same. This will power every major data product we have imagined.
+            </h1>
+        </div>
+
+
+        <div class="step" data-x="5000" data-y="25000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                But let's take a step back.
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="24500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                Nothing here is tied to POs.
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="24000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                Nothing is tied to a specific data store.
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="23500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                So what exactly is this?
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="23000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                It isn't a solution for POs.
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="22500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                It's a solution for <em>data.</em>
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="22000" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                It's the Productization...
+            </h1>
+        </div>
+        <div class="step" data-x="5000" data-y="21500" data-rotate="180" data-rotate-y="-30" data-scale="5">
+            <h1 class="fadesIn">
+                Of the Data Product <em>Company</em>
+            </h1>
+        </div>
+
+        <div class="step" data-x="9000" data-y="18000" data-rotate="90" data-scale="20"></div>
+        <div id="overview" class="step" data-x="5000" data-y="5000" data-scale="50">
+        </div>
+    </div>
+    <!--<script src="./bower_components/jquery/dist/jquery.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <!--<script src="./bower_components/impress.js/js/impress.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/impress.js/0.5.3/impress.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+    <script>
+        impress().init();
+
+        $(document).ready(function() {
+            hljs.initHighlightingOnLoad();
+        })
+
+        // Adapted from random internet scripts
+        window.requestAnimFrame = (function() {
+          return  window.requestAnimationFrame       ||
+                  window.webkitRequestAnimationFrame ||
+                  window.mozRequestAnimationFrame    ||
+                  function(callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                  };
+        })();
+
+    </script>
+</body>
+</html>
